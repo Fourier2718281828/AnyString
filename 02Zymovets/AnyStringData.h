@@ -10,15 +10,19 @@ public:
 	using char_ñref = AnyString::char_ñref;
 	using char_traits = AnyString::char_traits;
 	using size_type = AnyString::size_type;
+	using data_ptr = std::shared_ptr<string_data>;
 public:
 	string_data(const char_type* const, const size_type);
+	string_data(const char_type);
 	string_data(const string_data&) = delete;
 	~string_data();
 public:
-	string_data* getOwnCopy();
+	data_ptr getOwnCopy();
 	void assign(const char_type* const, const size_type);
 	void setShareable(bool sharable) noexcept;
 	bool isShareable() const noexcept;
+	size_type size() const noexcept;
+	char_type* chars() noexcept;
 public:
 	string_data& operator= (const string_data&) = delete;
 private:
@@ -31,11 +35,19 @@ private:
 
 template<typename CharType, typename CharTraits>
 inline AnyString<CharType, CharTraits>::string_data::string_data(const char_type* const str, const size_type size) :
-	_chrs(new char_type[size + 1]),
+	_chrs(new char_type[size + 1]), //Bad practice - solved by allocators
 	_size(size),
 	_shareable(true)
 {
 	copy_elems_from(str, size + 1);
+}
+
+template<typename CharType, typename CharTraits>
+inline AnyString<CharType, CharTraits>::string_data::string_data(const char_type c) :
+	_chrs(new char_type[2] {c, 0}), //Bad practice - solved by allocators
+	_size(1u),
+	_shareable(true)
+{
 }
 
 template<typename CharType, typename CharTraits>
@@ -55,6 +67,18 @@ template<typename CharType, typename CharTraits>
 inline bool AnyString<CharType, CharTraits>::string_data::isShareable() const noexcept
 {
 	return _shareable;
+}
+
+template<typename CharType, typename CharTraits>
+inline auto AnyString<CharType, CharTraits>::string_data::size() const noexcept -> size_type
+{
+	return _size;
+}
+
+template<typename CharType, typename CharTraits>
+inline auto AnyString<CharType, CharTraits>::string_data::chars() noexcept -> char_type*
+{
+	return _chrs;
 }
 
 template<typename CharType, typename CharTraits>

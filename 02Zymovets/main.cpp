@@ -2,10 +2,17 @@
 #include <iostream>
 using std::cout;
 using std::endl;
-#include <string_view>
+
+AnyString<char> f()
+{
+	return "abd";
+}
+
 int main()
 {
-	AnyString<char> s;
-	 std::string a = std::string("asd");
+	AnyString<char> s = "abcd", d = "vbnm";
+	s[0] = '$';
+	cout << s[0];
+	cout << s.size() << endl;
 	return 0;
 }

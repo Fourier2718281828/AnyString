@@ -23,23 +23,25 @@ private:
 	using data_ptr = std::shared_ptr<string_data>;
 public:
 	AnyString();
-	AnyString(std::nullptr_t);
+	AnyString(std::nullptr_t) = delete;
 	AnyString(const char_type);
 	AnyString(const char_type* const);
-	AnyString(const AnyString&);
-	AnyString(AnyString&&) noexcept;
+	AnyString(const AnyString&) = default;     //TODO check
+	AnyString(AnyString&&) noexcept = default; //TODO check
 	~AnyString();
 public:
-	AnyString& operator=(const AnyString&)&;
-	AnyString& operator=(AnyString&&)& noexcept;
+	AnyString& operator=(const AnyString&)& = default;     //TODO check
+	AnyString& operator=(AnyString&&)& noexcept = default; //TODO check
 	AnyString& operator+=(const AnyString&)&;
-
 public:
-	CharProxy operator[](const size_type);
+	CharProxy  operator[](const size_type);
 	char_ñref  operator[](const size_type) const;
 	size_type  size()  const noexcept;
-	void empty() const noexcept;
+	bool empty() const noexcept;
 	void clear();
+	void check_at(const size_type) const;
+	const char_type& read_at(const size_type) const;
+	void write_at(char_ñref, const size_type);
 private:
 	data_ptr _data;
 };
