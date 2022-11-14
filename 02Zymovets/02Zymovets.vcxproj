@@ -141,6 +141,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnyString.h" />
+    <ClInclude Include="AnyStringProxy.h" />
+    <ClInclude Include="AnyStringRealization.h" />
+    <ClInclude Include="CharTraits.h" />
+    <ClInclude Include="AnyStringData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
