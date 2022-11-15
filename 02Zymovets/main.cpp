@@ -10,6 +10,7 @@ int main()
 	using namespace Zymovets02_AnyString;
 	AnyString<char> s = "abcd", d = "vbnm";
 	s[0] = '$';
+	s = d;
 	cout << s[0];
 	cout << s.size() << endl;
 	cout << s;

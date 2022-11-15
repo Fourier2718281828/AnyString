@@ -30,11 +30,11 @@ public:
 	AnyString(std::nullptr_t) = delete;
 	AnyString(const char_type);
 	AnyString(const char_type* const);
-	AnyString(const AnyString&) = default;     //TODO check
+	AnyString(const AnyString&);     //TODO check
 	AnyString(AnyString&&) noexcept = default; //TODO check
 	~AnyString();
 public:
-	AnyString& operator=(const AnyString&)& = default;     //TODO check
+	AnyString& operator=(const AnyString&)&;     //TODO check
 	AnyString& operator=(AnyString&&)& noexcept = default; //TODO check
 	AnyString& operator+=(const AnyString&)&;
 public:

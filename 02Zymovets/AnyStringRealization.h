@@ -22,7 +22,28 @@ ANY_MEMBER AnyString(const char_type* const chrs) :
 {
 }
 
+ANY_MEMBER AnyString(const AnyString& str) :
+	_data
+	(
+		_data->is_shareable()
+		? str._data
+		: str._data->clone()
+	)
+{
+}
+
 ANY_MEMBER ~AnyString() = default;
+
+ANY_METHOD operator=(const AnyString& str)& -> AnyString&
+{
+	if (this == &str)
+		return *this;
+
+	_data = _data->is_shareable()
+		? str._data
+		: str._data->clone();
+	return *this;
+}
 
 ANY_METHOD operator[](const size_type i) -> CharProxy
 {
@@ -60,7 +81,7 @@ ANY_METHOD read_at(const size_type i) const -> const char_type&
 ANY_METHOD write_at(char_ñref c, const size_type i) -> void
 {
 	if(_data.use_count() != 1) 
-		_data = _data->getOwnCopy();
+		_data = _data->clone();
 	_data->chars()[i] = c;
 }
 

@@ -20,10 +20,10 @@ public:
 	string_data(const string_data&) = delete;
 	~string_data();
 public:
-	data_ptr getOwnCopy() const;
+	data_ptr clone() const;
 	void assign(const char_type* const, const size_type);
-	void setShareable(bool sharable) noexcept;
-	bool isShareable() const noexcept;
+	void set_shareable(bool sharable) noexcept;
+	bool is_shareable() const noexcept;
 	size_type size() const noexcept;
 	char_type* chars() noexcept;
 public:
@@ -57,17 +57,17 @@ DATA_MEMBER ~string_data()
 	_chrs = nullptr;
 }
 
-DATA_METHOD string_data::getOwnCopy() const -> data_ptr
+DATA_METHOD string_data::clone() const -> data_ptr
 {
 	return std::make_shared<string_data>(_chrs, size());
 }
 
-DATA_METHOD setShareable(bool shareable) noexcept -> void
+DATA_METHOD set_shareable(bool shareable) noexcept -> void
 {
 	_shareable = shareable;
 }
 
-DATA_METHOD isShareable() const noexcept -> bool
+DATA_METHOD is_shareable() const noexcept -> bool
 {
 	return _shareable;
 }

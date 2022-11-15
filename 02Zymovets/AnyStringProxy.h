@@ -93,9 +93,9 @@ PROXY_METHOD operator=(char_ñref c) -> CharProxy&
 
 PROXY_METHOD get_infected() -> void
 {
-	if (_proxyship._data->isShareable() && _proxyship._data.use_count() > 1)
+	if (_proxyship._data->is_shareable() && _proxyship._data.use_count() > 1)
 		_proxyship._data = std::make_shared<string_data>(_proxyship._data->chars(), _proxyship._data->size());
-	_proxyship._data->setShareable(false);
+	_proxyship._data->set_shareable(false);
 }
 
 std::wostream& operator<<(std::wostream& o, const AnyString<wchar_t>::CharProxy& proxy)
