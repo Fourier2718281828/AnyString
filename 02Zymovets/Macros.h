@@ -21,11 +21,17 @@ inline auto AnyString<CharType, CharTraits> ::
 template<typename CharType, typename CharTraits>               \
 inline auto AnyString<CharType, CharTraits> :: string_data ::  
 
-#define PROXY_METHOD                                            \
+#define PROXY_METHOD                                           \
 template<typename CharType, typename CharTraits>               \
 inline auto AnyString<CharType, CharTraits> :: CharProxy :: 
 
 #define ANY_BEGIN namespace Zymovets02_AnyString {
 #define ANY_END   }
+
+#define PRINT(message) _STD cout << message << '\n';
+
+#ifndef NDEBUG
+#include <iostream>
+#endif // !NDEBUG
 
 #endif // !_MACROS_ANYSTRING_

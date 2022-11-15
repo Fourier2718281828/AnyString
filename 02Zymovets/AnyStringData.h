@@ -53,8 +53,14 @@ DATA_MEMBER string_data(const char_type c) :
 
 DATA_MEMBER ~string_data()
 {
+#ifndef NDEBUG
+	PRINT("###String Data deleted : " << _chrs)
+#endif // !NDEBUG
+
 	delete[] _chrs;
 	_chrs = nullptr;
+	_size = 0u;
+	_shareable = false;
 }
 
 DATA_METHOD string_data::clone() const -> data_ptr

@@ -98,11 +98,6 @@ PROXY_METHOD get_infected() -> void
 	_proxyship._data->set_shareable(false);
 }
 
-std::wostream& operator<<(std::wostream& o, const AnyString<wchar_t>::CharProxy& proxy)
-{
-	return o << static_cast<const wchar_t>(proxy);
-}
-
 ANY_END
 
 #endif // !_ANY_STRING_PROXY_

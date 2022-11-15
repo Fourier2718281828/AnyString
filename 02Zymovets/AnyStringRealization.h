@@ -10,39 +10,95 @@ ANY_BEGIN
 ANY_MEMBER AnyString() :
 	_data(std::make_shared<string_data>("", 0u))
 {
+#ifndef NDEBUG
+	PRINT("###AnyString()")
+#endif // !NDEBUG
+
 }
 
 ANY_MEMBER AnyString(const char_type c) :
 	_data(std::make_shared<string_data>(c))
 {
+#ifndef NDEBUG
+	PRINT("###AnyString(const char_type c)")
+#endif // !NDEBUG
 }
 
 ANY_MEMBER AnyString(const char_type* const chrs) :
 	_data(std::make_shared<string_data>(chrs, strlen(chrs)))
 {
+#ifndef NDEBUG
+	PRINT("###AnyString(const char_type* const chrs)")
+#endif // !NDEBUG
 }
 
 ANY_MEMBER AnyString(const AnyString& str) :
 	_data
 	(
-		_data->is_shareable()
+		str._data->is_shareable()
 		? str._data
 		: str._data->clone()
 	)
 {
+#ifndef NDEBUG
+	PRINT("###AnyString(const AnyString& str)")
+#endif // !NDEBUG
 }
 
-ANY_MEMBER ~AnyString() = default;
+ANY_MEMBER AnyString(AnyString&& str) noexcept :
+	_data(std::move(str._data))
+{
+#ifndef NDEBUG
+	PRINT("###AnyString(AnyString&& str)")
+#endif // !NDEBUG
+}
+
+ANY_MEMBER ~AnyString()
+{
+#ifndef NDEBUG
+	PRINT("###~AnyString()")
+#endif // !NDEBUG
+}
 
 ANY_METHOD operator=(const AnyString& str)& -> AnyString&
 {
-	if (this == &str)
-		return *this;
+	if (this != &str)
+	{
+		_data = str._data->is_shareable()
+			? str._data
+			: str._data->clone();
+		/*if (str._data->is_shareable())
+		{
+			_data = str._data;
+		}
+		else
+		{
+			_data = str._data->clone();
+		}*/
+#ifndef NDEBUG
+		PRINT("###operator=(const AnyString& str)&")
+#endif // !NDEBUG
+	}
 
-	_data = _data->is_shareable()
-		? str._data
-		: str._data->clone();
 	return *this;
+}
+
+ANY_METHOD operator=(AnyString&& str) & noexcept -> AnyString&
+{
+	if (this != &str)
+	{
+		_data = std::move(str._data);
+#ifndef NDEBUG
+		PRINT("operator=(AnyString&& str)&")
+#endif // !NDEBUG
+	}
+
+	return *this;
+}
+
+ANY_METHOD operator+=(const AnyString& str)& -> AnyString&
+{
+	return *this = *this + str;
 }
 
 ANY_METHOD operator[](const size_type i) -> CharProxy
@@ -67,6 +123,12 @@ ANY_METHOD empty() const noexcept -> bool
 	return size() == 0u;
 }
 
+ANY_METHOD clear() -> void
+{
+	*this = AnyString();
+}
+
+
 ANY_METHOD check_at(const size_type i) const -> void
 {
 	if (i >= size())
@@ -83,6 +145,16 @@ ANY_METHOD write_at(char_ñref c, const size_type i) -> void
 	if(_data.use_count() != 1) 
 		_data = _data->clone();
 	_data->chars()[i] = c;
+}
+
+ANY_METHOD is_shareable() const -> bool
+{
+	return _data->is_shareable();
+}
+
+ANY_METHOD ref_counter() const -> size_type
+{
+	return _data.use_count();
 }
 
 ANY_END
