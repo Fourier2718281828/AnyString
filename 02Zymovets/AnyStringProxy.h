@@ -3,7 +3,10 @@
 #include "AnyString.h"
 #include "AnyStringData.h"
 #include "AnyStringRealization.h"
+#include "Macros.h"
 #include <ostream>
+
+ANY_BEGIN
 
 template<typename CharType, typename CharTraits>
 class AnyString<CharType, CharTraits>::CharProxy
@@ -19,7 +22,8 @@ public:
 	* provided Proxy is a nested class (nested within template AnyString) 
 	*/
 
-	friend std::ostream& operator<<(std::ostream& o, const CharProxy& proxy) 
+	friend std::basic_ostream<CharType, CharTraits>& 
+		operator<<(std::basic_ostream<CharType, CharTraits>& o, const CharProxy& proxy)
 	{
 		return o << static_cast<const char_type&>(proxy);
 	}
@@ -36,7 +40,7 @@ private:
 public:
 	const char_type* operator&() const;
 	char_type* operator&();
-	operator char_type() const;
+	//operator char_type() const;
 	operator char_type& ();
 	operator const char_type& () const;
 	CharProxy& operator=(char_ñref c);
@@ -48,65 +52,57 @@ private:
 };
 
 
-template<typename CharType, typename CharTraits>
-AnyString<CharType, CharTraits>::CharProxy::CharProxy(AnyString& str, const size_type index) :
+PROXY_MEMBER CharProxy(AnyString& str, const size_type index) :
 	_proxyship(str),
 	_index(index)
 {
 }
 
-template<typename CharType, typename CharTraits>
-inline auto AnyString<CharType, CharTraits>::CharProxy::operator&() const -> const char_type*
+PROXY_METHOD operator&() const -> const char_type*
 {
 	return &_proxyship->_data->chars()[_index];
 }
 
-template<typename CharType, typename CharTraits>
-inline auto AnyString<CharType, CharTraits>::CharProxy::operator&() -> char_type*
+PROXY_METHOD CharProxy::operator&() -> char_type*
 {
 	get_infected();
 	return &_proxyship->_data->chars()[_index];
 }
 
-template<typename CharType, typename CharTraits>
-inline AnyString<CharType, CharTraits>::CharProxy::operator char_type() const
-{
-	return _proxyship.read_at(_index);
-}
+//PROXY_MEMBER operator char_type() const
+//{
+//	return _proxyship.read_at(_index);
+//}
 
-template<typename CharType, typename CharTraits>
-inline AnyString<CharType, CharTraits>::CharProxy::operator char_type& ()
+PROXY_MEMBER operator char_type& ()
 {
 	get_infected();
 	return _proxyship._data->chars()[_index];
 }
 
-template<typename CharType, typename CharTraits>
-inline AnyString<CharType, CharTraits>::CharProxy::operator const char_type& () const
+PROXY_MEMBER operator const char_type& () const
 {
 	return _proxyship.read_at(_index);
 }
 
-template<typename CharType, typename CharTraits>
-inline auto AnyString<CharType, CharTraits>::CharProxy::operator=(char_ñref c) -> CharProxy&
+PROXY_METHOD operator=(char_ñref c) -> CharProxy&
 {
 	_proxyship.write_at(c, _index);
 	return *this;
 }
 
-
-template<typename CharType, typename CharTraits>
-inline void AnyString<CharType, CharTraits>::CharProxy::get_infected()
+PROXY_METHOD get_infected() -> void
 {
 	if (_proxyship._data->isShareable() && _proxyship._data.use_count() > 1)
 		_proxyship._data = std::make_shared<string_data>(_proxyship._data->chars(), _proxyship._data->size());
 	_proxyship._data->setShareable(false);
 }
 
-//template<typename CharType, typename CharTraits>
-//std::ostream& operator<<(std::ostream& o, const typename AnyString<CharType, CharTraits>::CharProxy& proxy)
-//{
-//	using char_cref = typename AnyString<CharType, CharTraits>::CharProxy::char_cref;
-//	return o << static_cast<char_cref>(proxy); //Why used (char&) but not (const char&) cast?
-//}
+std::wostream& operator<<(std::wostream& o, const AnyString<wchar_t>::CharProxy& proxy)
+{
+	return o << static_cast<const wchar_t>(proxy);
+}
+
+ANY_END
+
 #endif // !_ANY_STRING_PROXY_

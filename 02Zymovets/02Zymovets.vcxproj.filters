@@ -6,6 +6,7 @@
     <ClInclude Include="AnyStringData.h" />
     <ClInclude Include="AnyStringRealization.h" />
     <ClInclude Include="AnyStringProxy.h" />
+    <ClInclude Include="Macros.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -1,6 +1,9 @@
 #ifndef _STRING_DATA_
 #define _STRING_DATA_
 #include "AnyString.h"
+#include "Macros.h"
+
+ANY_BEGIN
 
 template<typename CharType, typename CharTraits>
 class AnyString<CharType, CharTraits>::string_data
@@ -17,7 +20,7 @@ public:
 	string_data(const string_data&) = delete;
 	~string_data();
 public:
-	data_ptr getOwnCopy();
+	data_ptr getOwnCopy() const;
 	void assign(const char_type* const, const size_type);
 	void setShareable(bool sharable) noexcept;
 	bool isShareable() const noexcept;
@@ -33,8 +36,7 @@ private:
 	bool _shareable;
 };
 
-template<typename CharType, typename CharTraits>
-inline AnyString<CharType, CharTraits>::string_data::string_data(const char_type* const str, const size_type size) :
+DATA_MEMBER string_data(const char_type* const str, const size_type size) :
 	_chrs(new char_type[size + 1]), //Bad practice - solved by allocators
 	_size(size),
 	_shareable(true)
@@ -42,49 +44,49 @@ inline AnyString<CharType, CharTraits>::string_data::string_data(const char_type
 	copy_elems_from(str, size + 1);
 }
 
-template<typename CharType, typename CharTraits>
-inline AnyString<CharType, CharTraits>::string_data::string_data(const char_type c) :
+DATA_MEMBER string_data(const char_type c) :
 	_chrs(new char_type[2] {c, 0}), //Bad practice - solved by allocators
 	_size(1u),
 	_shareable(true)
 {
 }
 
-template<typename CharType, typename CharTraits>
-inline AnyString<CharType, CharTraits>::string_data::~string_data()
+DATA_MEMBER ~string_data()
 {
-	delete _chrs;
+	delete[] _chrs;
 	_chrs = nullptr;
 }
 
-template<typename CharType, typename CharTraits>
-inline void AnyString<CharType, CharTraits>::string_data::setShareable(bool shareable) noexcept
+DATA_METHOD string_data::getOwnCopy() const -> data_ptr
+{
+	return std::make_shared<string_data>(_chrs, size());
+}
+
+DATA_METHOD setShareable(bool shareable) noexcept -> void
 {
 	_shareable = shareable;
 }
 
-template<typename CharType, typename CharTraits>
-inline bool AnyString<CharType, CharTraits>::string_data::isShareable() const noexcept
+DATA_METHOD isShareable() const noexcept -> bool
 {
 	return _shareable;
 }
 
-template<typename CharType, typename CharTraits>
-inline auto AnyString<CharType, CharTraits>::string_data::size() const noexcept -> size_type
+DATA_METHOD size() const noexcept -> size_type
 {
 	return _size;
 }
 
-template<typename CharType, typename CharTraits>
-inline auto AnyString<CharType, CharTraits>::string_data::chars() noexcept -> char_type*
+DATA_METHOD chars() noexcept -> char_type*
 {
 	return _chrs;
 }
 
-template<typename CharType, typename CharTraits>
-inline void AnyString<CharType, CharTraits>::string_data::copy_elems_from(const char_type* const str, const size_type size)
+DATA_METHOD copy_elems_from(const char_type* const str, const size_type size) -> void
 {
 	strcpy_s(_chrs, size, str);
 }
+
+ANY_END
 
 #endif // !_STRING_DATA_

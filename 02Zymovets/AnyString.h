@@ -1,7 +1,11 @@
 #ifndef _ANYSTRING_ZYMOVETS_
 #define _ANYSTRING_ZYMOVETS_
 #include "CharTraits.h"
+#include "Macros.h"
 #include <memory>
+#include <ostream>
+
+ANY_BEGIN
 
 template<typename CharType, typename CharTraits = CharTraits<CharType>>
 class AnyString
@@ -54,6 +58,34 @@ private:
 //bool operator>=	(const String&, const String&);
 //
 //String operator+(const String&, const String&);
+
+//template<typename CharType, typename CharTraits>
+//std::basic_ostream<CharType, CharTraits>& 
+//operator<<(std::basic_ostream<CharType, CharTraits>& o, const AnyString<CharType, CharTraits>& str)
+//{
+//	using size_type = AnyString<CharType, CharTraits>::size_type;
+//	for (size_type i = 0u; i < str.size(); ++i)
+//	{
+//		o << str[i];
+//	}
+//
+//	return o;
+//}
+
+template<typename CharType, typename CharTraits>
+std::ostream& 
+operator<<(std::ostream& o, const AnyString<CharType, CharTraits>& str)
+{
+	using size_type = AnyString<CharType, CharTraits>::size_type;
+	for (size_type i = 0u; i < str.size(); ++i)
+	{
+		o << str[i];
+	}
+
+	return o;
+}
+
+ANY_END
 
 #include "AnyStringRealization.h"
 #include "AnyStringData.h"
