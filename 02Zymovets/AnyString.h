@@ -7,7 +7,7 @@
 
 ANY_BEGIN
 
-template<typename CharType, typename CharTraits = CharTraits<CharType>>
+template<typename CharType, typename CharTraits = CharTraits<CharType, int>>
 class AnyString
 {
 public:

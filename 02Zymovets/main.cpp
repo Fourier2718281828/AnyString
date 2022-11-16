@@ -141,7 +141,6 @@ int main()
 	//prev_test();
 	std::string a = "asd";
 	std::string b = std::move(a);
-	a < b;
 	cout << a;
 	AnyString<char> str = "asdasd";
 	AnyString<char> str1 = std::move(str);
