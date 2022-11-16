@@ -157,6 +157,22 @@ ANY_METHOD ref_counter() const -> size_type
 	return _data.use_count();
 }
 
+ANY_METHOD compare(const AnyString& str) const -> int
+{
+	char_type* first = _data->chars();
+	char_type* second = str._data->chars();
+
+	const size_type len1 = char_traits::length(first);
+	const size_type len2 = char_traits::length(second);
+
+	const int cmp = 0;//char_traits::compare(first, second, std::min(len1, len2);
+	
+	if (cmp)         return cmp;
+	if (len1 < len2) return -1;
+	if (len1 > len2) return 1;
+	                 return 0;
+}
+
 ANY_END
 
 #endif // !_ANY_STRING_REALIZATION_

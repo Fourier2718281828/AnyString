@@ -10,6 +10,7 @@ class CharTraits
 public:
 	using char_type = _CharType;
 	using int_type = _IntType;
+	using comparison_category = std::strong_ordering;
 public:
 
 
