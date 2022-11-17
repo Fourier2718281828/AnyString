@@ -183,14 +183,14 @@ public:
 
 	static char_type* move(char_type* dest, const char_type* src, size_t count)
 	{
-		memmove(dest, src, count * sizeof(char_type)); //TODO fix
+		memmove(dest, src, count * sizeof(char_type));
 		return dest;
 	}
 
 
 	static char_type* copy(char_type* dest, const char_type* src, size_t count)
 	{
-		memcpy(dest, src, count * sizeof(char_type)); //TODO fix
+		memcpy(dest, src, count * sizeof(char_type));
 		return dest;
 	}
 

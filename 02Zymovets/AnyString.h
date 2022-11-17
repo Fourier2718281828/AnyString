@@ -25,6 +25,8 @@ public:
 	class BadAnyString;
 private:
 	using data_ptr = std::shared_ptr<string_data>;
+private:
+	AnyString(const size_type);
 public:
 	AnyString();
 	AnyString(std::nullptr_t) = delete;
@@ -73,20 +75,12 @@ public:
 		return static_cast<char_traits::comparison_category>(a.compare(b) <=> 0);
 	}
 
-	//USE TRAITS FUNCTIONS AND USE MOVE SEMANTICS!
 	friend inline AnyString operator+ (const AnyString& a,const AnyString& b)
 	{
 		size_type size = a.size() + b.size();
-		char_type* res = new char_type[size + 1];
-		for (size_type i = 0u; i < size; ++i)
-		{
-			res[i] = i < a.size()
-				? a[i]
-				: b[i - a.size()];
-		}
-
-		res[size] = char_type(); // TODO make more reusable (not using 0)
-
+		AnyString res(size);
+		char_traits::copy(res._data->chars(), a._data->chars(), a.size());
+		char_traits::copy(res._data->chars() + a.size(), b._data->chars(), b.size());
 		return res;
 	}
 
@@ -115,19 +109,6 @@ std::wostream& operator<<(std::wostream& o, const AnyString<CharType, CharTraits
 
 	return o;
 }
-//
-//template<typename CharType, typename CharTraits>
-//std::basic_ostream<CharType, CharTraits>& 
-//operator<<(std::basic_ostream<CharType, CharTraits>& o, const AnyString<CharType, CharTraits>& str)
-//{
-//	using size_type = AnyString<CharType, CharTraits>::size_type;
-//	for (size_type i = 0u; i < str.size(); ++i)
-//	{
-//		o << str[i];
-//	}
-//
-//	return o;
-//}
 
 ANY_END
 

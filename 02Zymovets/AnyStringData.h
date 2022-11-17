@@ -16,6 +16,7 @@ public:
 	using data_ptr = std::shared_ptr<string_data>;
 public:
 	string_data();
+	string_data(const size_type);
 	string_data(const char_type* const, const size_type);
 	string_data(const char_type);
 	string_data(const string_data&) = delete;
@@ -27,10 +28,9 @@ public:
 	bool is_shareable() const noexcept;
 	size_type size() const noexcept;
 	char_type* chars() noexcept;
+	void copy_elems_from(const char_type* const, const size_type);
 public:
 	string_data& operator= (const string_data&) = delete;
-private:
-	void copy_elems_from(const char_type* const, const size_type);
 private:
 	char_type* _chrs;
 	size_type _size;
@@ -44,8 +44,16 @@ DATA_MEMBER string_data::string_data() :
 {
 }
 
+DATA_MEMBER string_data::string_data(const size_type n) :
+	_chrs(new char_type[n + 1]),
+	_size(n),
+	_shareable(true)
+{
+	_chrs[n] = char_type();
+}
+
 DATA_MEMBER string_data(const char_type* const str, const size_type size) :
-	_chrs(new char_type[size + 1]), //Bad practice - solved by allocators
+	_chrs(new char_type[size + 1]),
 	_size(size),
 	_shareable(true)
 {

@@ -148,26 +148,29 @@ void tester(const AnyString<wchar_t, CharTraits>& str)
 int main()
 {
 	//prev_test();
-	String str_e;
-	cout << str_e << endl;;
-	String str = "asdasd";
-	cout << str << endl;
-	String str1 = str;
-	str1[0] = 'c';
-	//tester(str);
-	tester(str1);
-	str1 = "different";
-	//tester(str);
-	tester(str1);
+	//std::string() + std::string();
+	//String str_e;
+	//cout << str_e << endl;;
+	//String str = "asdasd";
+	//cout << str << endl;
+	//String str1 = str;
+	//str1[0] = 'c';
+	////tester(str);
+	//tester(str1);
+	//str1 = "different";
+	////tester(str);
+	//tester(str1);
 
-	WString aaaa = L"asda";
-	aaaa[0] = L'B';
+	//WString aaaa = L"asda";
+	//aaaa[0] = L'B';
 
-	cout << (str == str1);
-	cout << (str != str1);
-	cout << (str < str1);
-	cout << (str > str1);
-	cout << (str <= str1);
-	cout << (str >= str1);
+	//cout << (str == str1);
+	//cout << (str != str1);
+	//cout << (str < str1);
+	//cout << (str > str1);
+	//cout << (str <= str1);
+	//cout << (str >= str1);
+
+	cout << String("aBc") + String("cdeE") << endl;
 	return 0;
 }

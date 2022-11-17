@@ -7,6 +7,12 @@
 
 ANY_BEGIN
 
+ANY_MEMBER AnyString(const size_type count) :
+	_data(std::make_shared<string_data>(count))
+{
+
+}
+
 ANY_MEMBER AnyString() :
 	_data(std::make_shared<string_data>())
 {
