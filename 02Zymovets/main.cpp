@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 using std::cout;
+using std::wcout;
 using std::endl;
 using namespace Zymovets02_AnyString;
 
@@ -128,21 +129,28 @@ using namespace Zymovets02_AnyString;
 //	pringToSort();
 //}
 
-template <typename ÑhaType, typename CharTraits>
-void tester(const AnyString<ÑhaType, CharTraits>& str)
+template <typename ÑhaType, typename BasicCharTraits>
+void tester(const AnyString<ÑhaType, BasicCharTraits>& str)
 {
-	cout << "AnyString: " << str << endl;
-	cout << "Shareable: " << str.is_shareable() << endl;
-	cout << "RefCount : " << str.ref_counter() << endl;
+	cout << "AnyString : " << str << endl;
+	cout << "Shareable : " << str.is_shareable() << endl;
+	cout << "RefCounter: " << str.ref_counter() << endl;
+}
+
+template <typename BasicCharTraits>
+void tester(const AnyString<wchar_t, BasicCharTraits>& str)
+{
+	wcout << "AnyString : " << str << endl;
+	wcout << "Shareable : " << str.is_shareable() << endl;
+	wcout << "RefCounter: " << str.ref_counter() << endl;
 }
 
 int main()
 {
 	//prev_test();
-	std::string a = "asd";
-	std::string b = std::move(a);
-	AnyString<char> str = "asdasd";
-	AnyString<char> str1 = str;
+	String str = "asdasd";
+	cout << str << endl;
+	String str1 = str;
 	str1[0] = 'c';
 	//tester(str);
 	tester(str1);

@@ -25,7 +25,7 @@ ANY_MEMBER AnyString(const char_type c) :
 }
 
 ANY_MEMBER AnyString(const char_type* const chrs) :
-	_data(std::make_shared<string_data>(chrs, strlen(chrs)))
+	_data(std::make_shared<string_data>(chrs, char_traits::length(chrs)/*strlen(chrs)*/))
 {
 #ifndef NDEBUG
 	PRINT("###AnyString(const char_type* const chrs)")

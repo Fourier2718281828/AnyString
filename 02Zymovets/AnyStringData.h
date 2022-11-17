@@ -5,8 +5,8 @@
 
 ANY_BEGIN
 
-template<typename CharType, typename CharTraits>
-class AnyString<CharType, CharTraits>::string_data
+template<typename CharType, typename BasicCharTraits>
+class AnyString<CharType, BasicCharTraits>::string_data
 {
 public:
 	using char_type = AnyString::char_type;
@@ -54,7 +54,7 @@ DATA_MEMBER string_data(const char_type c) :
 DATA_MEMBER ~string_data()
 {
 #ifndef NDEBUG
-	PRINT("###String Data deleted : " << _chrs)
+	//PRINT("###String Data deleted : " << _chrs)
 #endif // !NDEBUG
 
 	delete[] _chrs;
@@ -90,7 +90,8 @@ DATA_METHOD chars() noexcept -> char_type*
 
 DATA_METHOD copy_elems_from(const char_type* const str, const size_type size) -> void
 {
-	strcpy_s(_chrs, size, str);
+	//strcpy_s(_chrs, size, str);
+	char_traits::copy(_chrs, str, size);
 }
 
 ANY_END

@@ -7,13 +7,13 @@
 
 ANY_BEGIN
 
-template<typename CharType, typename CharTraits = CharTraits<CharType, int> >
+template<typename CharType, typename BasicCharTraits = CharTraits<CharType> >
 class AnyString
 {
 public:
 	using char_type = CharType;
 	using char_ñref  = const char_type&;
-	using char_traits = CharTraits;
+	using char_traits = BasicCharTraits;
 	using size_type = size_t;
 public:
 	static_assert(std::is_same_v<char_type, typename char_traits::char_type>, 
@@ -55,9 +55,9 @@ private:
 
 public:
 
-	friend inline bool operator==(const AnyString<CharType, CharTraits>& a, const AnyString<CharType, CharTraits>& b)
+	friend inline bool operator==(const AnyString<CharType, BasicCharTraits>& a, const AnyString<CharType, BasicCharTraits>& b)
 	{
-		using size_type = AnyString<CharType, CharTraits>::size_type;
+		using size_type = AnyString<CharType, BasicCharTraits>::size_type;
 		if (a.size() != b.size()) return false;
 
 		for (size_type i = 0u; i < a.size(); ++i)
@@ -91,10 +91,10 @@ public:
 
 };
 
-template<typename CharType, typename CharTraits>
-std::ostream& operator<<(std::ostream& o, const AnyString<CharType, CharTraits>& str)
+template<typename CharType, typename BasicCharTraits>
+std::ostream& operator<<(std::ostream& o, const AnyString<CharType, BasicCharTraits>& str)
 {
-	using size_type = AnyString<CharType, CharTraits>::size_type;
+	using size_type = AnyString<CharType, BasicCharTraits>::size_type;
 	for (size_type i = 0u; i < str.size(); ++i)
 	{
 		o << str[i];
@@ -103,10 +103,10 @@ std::ostream& operator<<(std::ostream& o, const AnyString<CharType, CharTraits>&
 	return o;
 }
 
-template<typename CharType, typename CharTraits>
-std::wostream& operator<<(std::wostream& o, const AnyString<CharType, CharTraits>& str)
+template<typename CharType, typename BasicCharTraits>
+std::wostream& operator<<(std::wostream& o, const AnyString<CharType, BasicCharTraits>& str)
 {
-	using size_type = AnyString<CharType, CharTraits>::size_type;
+	using size_type = AnyString<CharType, BasicCharTraits>::size_type;
 	for (size_type i = 0u; i < str.size(); ++i)
 	{
 		o << str[i];
@@ -114,7 +114,7 @@ std::wostream& operator<<(std::wostream& o, const AnyString<CharType, CharTraits
 
 	return o;
 }
-
+//
 //template<typename CharType, typename CharTraits>
 //std::basic_ostream<CharType, CharTraits>& 
 //operator<<(std::basic_ostream<CharType, CharTraits>& o, const AnyString<CharType, CharTraits>& str)
@@ -132,4 +132,5 @@ ANY_END
 
 #include "AnyStringRealization.h"
 #include "AnyStringData.h"
+#include "Typedefs.h"
 #endif // !_ANYSTRING_ZYMOVETS_
