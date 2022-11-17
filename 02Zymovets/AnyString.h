@@ -7,13 +7,13 @@
 
 ANY_BEGIN
 
-template<typename CharType, typename BasicCharTraits = CharTraits<CharType> >
+template<typename CharType, typename CharTraits = CharTraits<CharType> >
 class AnyString
 {
 public:
 	using char_type = CharType;
 	using char_ñref  = const char_type&;
-	using char_traits = BasicCharTraits;
+	using char_traits = CharTraits;
 	using size_type = size_t;
 public:
 	static_assert(std::is_same_v<char_type, typename char_traits::char_type>, 
@@ -55,9 +55,9 @@ private:
 
 public:
 
-	friend inline bool operator==(const AnyString<CharType, BasicCharTraits>& a, const AnyString<CharType, BasicCharTraits>& b)
+	friend inline bool operator==(const AnyString& a, const AnyString& b)
 	{
-		using size_type = AnyString<CharType, BasicCharTraits>::size_type;
+		using size_type = AnyString<CharType, CharTraits>::size_type;
 		if (a.size() != b.size()) return false;
 
 		for (size_type i = 0u; i < a.size(); ++i)
@@ -91,10 +91,10 @@ public:
 
 };
 
-template<typename CharType, typename BasicCharTraits>
-std::ostream& operator<<(std::ostream& o, const AnyString<CharType, BasicCharTraits>& str)
+template<typename CharType, typename CharTraits>
+std::ostream& operator<<(std::ostream& o, const AnyString<CharType, CharTraits>& str)
 {
-	using size_type = AnyString<CharType, BasicCharTraits>::size_type;
+	using size_type = AnyString<CharType, CharTraits>::size_type;
 	for (size_type i = 0u; i < str.size(); ++i)
 	{
 		o << str[i];
@@ -103,10 +103,10 @@ std::ostream& operator<<(std::ostream& o, const AnyString<CharType, BasicCharTra
 	return o;
 }
 
-template<typename CharType, typename BasicCharTraits>
-std::wostream& operator<<(std::wostream& o, const AnyString<CharType, BasicCharTraits>& str)
+template<typename CharType, typename CharTraits>
+std::wostream& operator<<(std::wostream& o, const AnyString<CharType, CharTraits>& str)
 {
-	using size_type = AnyString<CharType, BasicCharTraits>::size_type;
+	using size_type = AnyString<CharType, CharTraits>::size_type;
 	for (size_type i = 0u; i < str.size(); ++i)
 	{
 		o << str[i];

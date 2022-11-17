@@ -8,7 +8,7 @@
 ANY_BEGIN
 
 ANY_MEMBER AnyString() :
-	_data(std::make_shared<string_data>("", 0u))
+	_data(std::make_shared<string_data>())
 {
 #ifndef NDEBUG
 	PRINT("###AnyString()")
@@ -25,7 +25,7 @@ ANY_MEMBER AnyString(const char_type c) :
 }
 
 ANY_MEMBER AnyString(const char_type* const chrs) :
-	_data(std::make_shared<string_data>(chrs, char_traits::length(chrs)/*strlen(chrs)*/))
+	_data(std::make_shared<string_data>(chrs, char_traits::length(chrs)))
 {
 #ifndef NDEBUG
 	PRINT("###AnyString(const char_type* const chrs)")
@@ -67,14 +67,7 @@ ANY_METHOD operator=(const AnyString& str)& -> AnyString&
 		_data = str._data->is_shareable()
 			? str._data
 			: str._data->clone();
-		/*if (str._data->is_shareable())
-		{
-			_data = str._data;
-		}
-		else
-		{
-			_data = str._data->clone();
-		}*/
+
 #ifndef NDEBUG
 		PRINT("###operator=(const AnyString& str)&")
 #endif // !NDEBUG

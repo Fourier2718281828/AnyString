@@ -129,16 +129,16 @@ using namespace Zymovets02_AnyString;
 //	pringToSort();
 //}
 
-template <typename ÑhaType, typename BasicCharTraits>
-void tester(const AnyString<ÑhaType, BasicCharTraits>& str)
+template <typename ÑhaType, typename CharTraits>
+void tester(const AnyString<ÑhaType, CharTraits>& str)
 {
 	cout << "AnyString : " << str << endl;
 	cout << "Shareable : " << str.is_shareable() << endl;
 	cout << "RefCounter: " << str.ref_counter() << endl;
 }
 
-template <typename BasicCharTraits>
-void tester(const AnyString<wchar_t, BasicCharTraits>& str)
+template <typename CharTraits>
+void tester(const AnyString<wchar_t, CharTraits>& str)
 {
 	wcout << "AnyString : " << str << endl;
 	wcout << "Shareable : " << str.is_shareable() << endl;
@@ -148,6 +148,8 @@ void tester(const AnyString<wchar_t, BasicCharTraits>& str)
 int main()
 {
 	//prev_test();
+	String str_e;
+	cout << str_e << endl;;
 	String str = "asdasd";
 	cout << str << endl;
 	String str1 = str;

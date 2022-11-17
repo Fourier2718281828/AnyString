@@ -5,8 +5,8 @@
 
 ANY_BEGIN
 
-template<typename CharType, typename BasicCharTraits>
-class AnyString<CharType, BasicCharTraits>::string_data
+template<typename CharType, typename CharTraits>
+class AnyString<CharType, CharTraits>::string_data
 {
 public:
 	using char_type = AnyString::char_type;
@@ -15,6 +15,7 @@ public:
 	using size_type = AnyString::size_type;
 	using data_ptr = std::shared_ptr<string_data>;
 public:
+	string_data();
 	string_data(const char_type* const, const size_type);
 	string_data(const char_type);
 	string_data(const string_data&) = delete;
@@ -36,6 +37,13 @@ private:
 	bool _shareable;
 };
 
+DATA_MEMBER string_data::string_data() :
+	_chrs(new char_type[1] { char_type() }),
+	_size(0u),
+	_shareable(true)
+{
+}
+
 DATA_MEMBER string_data(const char_type* const str, const size_type size) :
 	_chrs(new char_type[size + 1]), //Bad practice - solved by allocators
 	_size(size),
@@ -54,7 +62,7 @@ DATA_MEMBER string_data(const char_type c) :
 DATA_MEMBER ~string_data()
 {
 #ifndef NDEBUG
-	//PRINT("###String Data deleted : " << _chrs)
+	PRINT("###String Data deleted")
 #endif // !NDEBUG
 
 	delete[] _chrs;
@@ -62,6 +70,8 @@ DATA_MEMBER ~string_data()
 	_size = 0u;
 	_shareable = false;
 }
+
+
 
 DATA_METHOD string_data::clone() const -> data_ptr
 {

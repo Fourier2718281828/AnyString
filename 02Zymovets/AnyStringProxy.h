@@ -8,11 +8,11 @@
 
 ANY_BEGIN
 
-template<typename CharType, typename BasicCharTraits>
-class AnyString<CharType, BasicCharTraits>::CharProxy
+template<typename CharType, typename CharTraits>
+class AnyString<CharType, CharTraits>::CharProxy
 {
 public:
-	friend AnyString<CharType, BasicCharTraits>;
+	friend AnyString<CharType, CharTraits>;
 public:
 
 	/*
@@ -22,8 +22,8 @@ public:
 	* provided Proxy is a nested class (nested within template AnyString) 
 	*/
 
-	friend std::basic_ostream<CharType, BasicCharTraits>& 
-		operator<<(std::basic_ostream<CharType, BasicCharTraits>& o, const CharProxy& proxy)
+	friend std::basic_ostream<CharType, CharTraits>& 
+		operator<<(std::basic_ostream<CharType, CharTraits>& o, const CharProxy& proxy)
 	{
 		return o << static_cast<const char_type&>(proxy);
 	}
