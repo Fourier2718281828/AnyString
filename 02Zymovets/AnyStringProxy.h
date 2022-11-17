@@ -22,8 +22,12 @@ public:
 	* provided Proxy is a nested class (nested within template AnyString) 
 	*/
 
-	friend std::basic_ostream<CharType, CharTraits>& 
-		operator<<(std::basic_ostream<CharType, CharTraits>& o, const CharProxy& proxy)
+	friend std::ostream& operator<<(std::ostream& o, const CharProxy& proxy)
+	{
+		return o << static_cast<const char_type&>(proxy);
+	}
+
+	friend std::wostream& operator<<(std::wostream& o, const CharProxy& proxy)
 	{
 		return o << static_cast<const char_type&>(proxy);
 	}
@@ -40,8 +44,8 @@ private:
 public:
 	const char_type* operator&() const;
 	char_type* operator&();
-	//operator char_type() const;
-	operator char_type& ();
+	operator char_type() const;
+	explicit operator char_type& ();
 	operator const char_type& () const;
 	CharProxy& operator=(char_ñref c);
 private:
@@ -69,10 +73,10 @@ PROXY_METHOD CharProxy::operator&() -> char_type*
 	return &_proxyship->_data->chars()[_index];
 }
 
-//PROXY_MEMBER operator char_type() const
-//{
-//	return _proxyship.read_at(_index);
-//}
+PROXY_MEMBER operator char_type() const
+{
+	return _proxyship.read_at(_index);
+}
 
 PROXY_MEMBER operator char_type& ()
 {
@@ -94,7 +98,7 @@ PROXY_METHOD operator=(char_ñref c) -> CharProxy&
 PROXY_METHOD get_infected() -> void
 {
 	if (_proxyship._data->is_shareable() && _proxyship._data.use_count() > 1)
-		_proxyship._data = std::make_shared<string_data>(_proxyship._data->chars(), _proxyship._data->size());
+		_proxyship._data = _proxyship._data->clone();//std::make_shared<string_data>(_proxyship._data->chars(), _proxyship._data->size());
 	_proxyship._data->set_shareable(false);
 }
 

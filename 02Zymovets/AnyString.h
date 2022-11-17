@@ -73,6 +73,7 @@ public:
 		return static_cast<char_traits::comparison_category>(a.compare(b) <=> 0);
 	}
 
+	//USE TRAITS FUNCTIONS AND USE MOVE SEMANTICS!
 	friend inline AnyString operator+ (const AnyString& a,const AnyString& b)
 	{
 		size_type size = a.size() + b.size();

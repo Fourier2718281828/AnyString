@@ -71,8 +71,6 @@ DATA_MEMBER ~string_data()
 	_shareable = false;
 }
 
-
-
 DATA_METHOD string_data::clone() const -> data_ptr
 {
 	return std::make_shared<string_data>(_chrs, size());
@@ -100,7 +98,6 @@ DATA_METHOD chars() noexcept -> char_type*
 
 DATA_METHOD copy_elems_from(const char_type* const str, const size_type size) -> void
 {
-	//strcpy_s(_chrs, size, str);
 	char_traits::copy(_chrs, str, size);
 }
 

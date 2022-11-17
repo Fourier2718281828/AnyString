@@ -28,10 +28,10 @@ inline auto AnyString<CharType, CharTraits> :: CharProxy ::
 #define ANY_BEGIN namespace Zymovets02_AnyString {
 #define ANY_END   }
 
-#define PRINT(message) _STD cout << message << '\n';
-
 #ifndef NDEBUG
 #include <iostream>
 #endif // !NDEBUG
+
+#define PRINT(message) _STD cout << message << '\n';
 
 #endif // !_MACROS_ANYSTRING_

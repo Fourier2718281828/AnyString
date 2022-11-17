@@ -160,6 +160,9 @@ int main()
 	//tester(str);
 	tester(str1);
 
+	WString aaaa = L"asda";
+	aaaa[0] = L'B';
+
 	cout << (str == str1);
 	cout << (str != str1);
 	cout << (str < str1);

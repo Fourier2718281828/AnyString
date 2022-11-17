@@ -158,7 +158,7 @@ ANY_METHOD compare(const AnyString& str) const -> int
 	const size_type len1 = char_traits::length(first);
 	const size_type len2 = char_traits::length(second);
 
-	const int cmp = 0;//char_traits::compare(first, second, std::min(len1, len2);
+	const int cmp = char_traits::compare(first, second, std::min(len1, len2));
 	
 	if (cmp)         return cmp;
 	if (len1 < len2) return -1;
