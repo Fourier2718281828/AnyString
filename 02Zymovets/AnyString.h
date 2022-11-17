@@ -4,6 +4,7 @@
 #include "Macros.h"
 #include <memory>
 #include <ostream>
+#include <string>
 
 ANY_BEGIN
 
@@ -26,7 +27,8 @@ public:
 private:
 	using data_ptr = std::shared_ptr<string_data>;
 private:
-	AnyString(const size_type);
+	//AnyString(const size_type, AllocateMemoryOnly_tag);
+	AnyString(data_ptr&&);
 public:
 	AnyString();
 	AnyString(std::nullptr_t) = delete;
@@ -35,13 +37,17 @@ public:
 	AnyString(const AnyString&);
 	AnyString(AnyString&&) noexcept;
 	~AnyString();
+
+	template<typename OtherTraits, typename Alloc>
+	AnyString(const std::basic_string<char_type, OtherTraits, Alloc>&);
 public:
 	AnyString& operator=(const AnyString&)&;
 	AnyString& operator=(AnyString&&)& noexcept;
 	AnyString& operator+=(const AnyString&)&;
 public:
-	CharProxy  operator[](const size_type);
-	char_ñref  operator[](const size_type) const;
+	char_ñref  operator[](const size_type)&&;
+	CharProxy  operator[](const size_type)&;
+	char_ñref  operator[](const size_type) const&;
 	size_type  size()  const noexcept;
 	bool empty() const noexcept;
 	void clear();
@@ -75,13 +81,20 @@ public:
 		return static_cast<char_traits::comparison_category>(a.compare(b) <=> 0);
 	}
 
-	friend inline AnyString operator+ (const AnyString& a,const AnyString& b)
+	friend inline AnyString operator+ (const AnyString& a, const AnyString& b)
 	{
+		using allocate_tag = string_data::AllocateOnly_tag;
 		size_type size = a.size() + b.size();
+		data_ptr res = std::make_shared<string_data>(size, allocate_tag{});
+		char_traits::copy(res->chars(), a._data->chars(), a.size());
+		char_traits::copy(res->chars() + a.size(), b._data->chars(), b.size());
+		return AnyString(std::move(res));
+
+		/*size_type size = a.size() + b.size();
 		AnyString res(size);
 		char_traits::copy(res._data->chars(), a._data->chars(), a.size());
 		char_traits::copy(res._data->chars() + a.size(), b._data->chars(), b.size());
-		return res;
+		return res;*/
 	}
 
 };

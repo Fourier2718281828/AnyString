@@ -15,10 +15,12 @@ public:
 	using size_type = AnyString::size_type;
 	using data_ptr = std::shared_ptr<string_data>;
 public:
+	struct AllocateOnly_tag {};
+public:
 	string_data();
-	string_data(const size_type);
+	explicit string_data(const size_type, AllocateOnly_tag);
 	string_data(const char_type* const, const size_type);
-	string_data(const char_type);
+	explicit string_data(const char_type);
 	string_data(const string_data&) = delete;
 	~string_data();
 public:
@@ -28,7 +30,7 @@ public:
 	bool is_shareable() const noexcept;
 	size_type size() const noexcept;
 	char_type* chars() noexcept;
-	void copy_elems_from(const char_type* const, const size_type);
+	//void copy_elems_from(const char_type* const, const size_type);
 public:
 	string_data& operator= (const string_data&) = delete;
 private:
@@ -38,33 +40,29 @@ private:
 };
 
 DATA_MEMBER string_data::string_data() :
-	_chrs(new char_type[1] { char_type() }),
-	_size(0u),
-	_shareable(true)
+	string_data(0u)
 {
 }
 
-DATA_MEMBER string_data::string_data(const size_type n) :
+DATA_MEMBER string_data::string_data(const size_type n, AllocateOnly_tag) :
 	_chrs(new char_type[n + 1]),
 	_size(n),
 	_shareable(true)
 {
-	_chrs[n] = char_type();
+	char_traits::assign(_chrs[n], char_type());
 }
 
 DATA_MEMBER string_data(const char_type* const str, const size_type size) :
-	_chrs(new char_type[size + 1]),
-	_size(size),
-	_shareable(true)
+	string_data(size, AllocateOnly_tag{})
 {
-	copy_elems_from(str, size + 1);
+	//copy_elems_from(str, size + 1); //HEREEEEEEEEEEEE
+	char_traits::copy(_chrs, str, size);
 }
 
 DATA_MEMBER string_data(const char_type c) :
-	_chrs(new char_type[2] {c, 0}), //Bad practice - solved by allocators
-	_size(1u),
-	_shareable(true)
+	string_data(1u, AllocateOnly_tag{})
 {
+	char_traits::assign(_chrs[0], c);
 }
 
 DATA_MEMBER ~string_data()
@@ -104,10 +102,10 @@ DATA_METHOD chars() noexcept -> char_type*
 	return _chrs;
 }
 
-DATA_METHOD copy_elems_from(const char_type* const str, const size_type size) -> void
-{
-	char_traits::copy(_chrs, str, size);
-}
+//DATA_METHOD copy_elems_from(const char_type* const str, const size_type size) -> void
+//{
+//	char_traits::copy(_chrs, str, size);
+//}
 
 ANY_END
 

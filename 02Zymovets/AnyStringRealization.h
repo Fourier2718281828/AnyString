@@ -7,10 +7,15 @@
 
 ANY_BEGIN
 
-ANY_MEMBER AnyString(const size_type count) :
-	_data(std::make_shared<string_data>(count))
-{
+//ANY_MEMBER AnyString(const size_type count, AllocateMemoryOnly_tag) :
+//	_data(std::make_shared<string_data>(count))
+//{
+//
+//}
 
+ANY_MEMBER AnyString(data_ptr&& data) :
+	_data(std::move(data))
+{
 }
 
 ANY_MEMBER AnyString() :
@@ -19,7 +24,6 @@ ANY_MEMBER AnyString() :
 #ifndef NDEBUG
 	PRINT("###AnyString()")
 #endif // !NDEBUG
-
 }
 
 ANY_MEMBER AnyString(const char_type c) :
@@ -66,6 +70,13 @@ ANY_MEMBER ~AnyString()
 #endif // !NDEBUG
 }
 
+template<typename CharType, typename CharTraits>
+template<typename OtherTraits, typename Alloc>
+inline AnyString<CharType, CharTraits>::AnyString(const std::basic_string<char_type, OtherTraits, Alloc>& str) :
+	AnyString(str.c_str())
+{
+}
+
 ANY_METHOD operator=(const AnyString& str)& -> AnyString&
 {
 	if (this != &str)
@@ -100,13 +111,19 @@ ANY_METHOD operator+=(const AnyString& str)& -> AnyString&
 	return *this = *this + str;
 }
 
-ANY_METHOD operator[](const size_type i) -> CharProxy
+ANY_METHOD operator[](const size_type i)&& -> char_ñref
+{
+	check_at(i);
+	return _data->chars()[i];
+}
+
+ANY_METHOD operator[](const size_type i)& -> CharProxy
 {
 	check_at(i);
 	return CharProxy(*this, i);
 }
 
-ANY_METHOD operator[](const size_type i) const -> char_ñref
+ANY_METHOD operator[](const size_type i) const& -> char_ñref
 {
 	check_at(i);
 	return _data->chars()[i];

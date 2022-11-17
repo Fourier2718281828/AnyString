@@ -42,10 +42,13 @@ public:
 private:
 	CharProxy(AnyString&, const size_type);
 public:
+	//char_type* operator&();     - causes unexpected unshareability
+	//operator char_type() const; - causes ambiguity when casting to char_type
+	//operator char_type& ();     - causes unexpected unshareability
 	const char_type* operator&() const;
-	char_type* operator&();
-	operator char_type() const;
-	explicit operator char_type& ();
+	char_type* char_ptr();
+	char_type char_copy() const;
+	char_type& char_ref();
 	operator const char_type& () const;
 	CharProxy& operator=(char_ñref c);
 private:
@@ -55,7 +58,6 @@ private:
 	const size_type _index;
 };
 
-
 PROXY_MEMBER CharProxy(AnyString& str, const size_type index) :
 	_proxyship(str),
 	_index(index)
@@ -64,21 +66,21 @@ PROXY_MEMBER CharProxy(AnyString& str, const size_type index) :
 
 PROXY_METHOD operator&() const -> const char_type*
 {
-	return &_proxyship->_data->chars()[_index];
+	return &_proxyship._data->chars()[_index];
 }
 
-PROXY_METHOD CharProxy::operator&() -> char_type*
+PROXY_METHOD char_ptr() -> char_type*
 {
 	get_infected();
-	return &_proxyship->_data->chars()[_index];
+	return &_proxyship._data->chars()[_index];
 }
 
-PROXY_MEMBER operator char_type() const
+PROXY_METHOD char_copy() const -> char_type
 {
 	return _proxyship.read_at(_index);
 }
 
-PROXY_MEMBER operator char_type& ()
+PROXY_METHOD char_ref() -> char_type&
 {
 	get_infected();
 	return _proxyship._data->chars()[_index];
@@ -89,6 +91,23 @@ PROXY_MEMBER operator const char_type& () const
 	return _proxyship.read_at(_index);
 }
 
+//PROXY_METHOD operator&() -> char_type*
+//{
+//	get_infected();
+//	return &_proxyship._data->chars()[_index];
+//}
+
+//PROXY_MEMBER operator char_type() const
+//{
+//	return _proxyship.read_at(_index);
+//}
+
+//PROXY_MEMBER operator char_type& ()
+//{
+//	get_infected();
+//	return _proxyship._data->chars()[_index];
+//}
+
 PROXY_METHOD operator=(char_ñref c) -> CharProxy&
 {
 	_proxyship.write_at(c, _index);
@@ -98,7 +117,7 @@ PROXY_METHOD operator=(char_ñref c) -> CharProxy&
 PROXY_METHOD get_infected() -> void
 {
 	if (_proxyship._data->is_shareable() && _proxyship._data.use_count() > 1)
-		_proxyship._data = _proxyship._data->clone();//std::make_shared<string_data>(_proxyship._data->chars(), _proxyship._data->size());
+		_proxyship._data = _proxyship._data->clone();
 	_proxyship._data->set_shareable(false);
 }
 
