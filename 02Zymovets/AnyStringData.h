@@ -39,7 +39,7 @@ private:
 };
 
 DATA_MEMBER string_data::string_data() :
-	string_data(0u)
+	string_data(0u, AllocateOnly_tag{})
 {
 }
 

@@ -29,20 +29,23 @@ private:
 private:
 	//AnyString(const size_type, AllocateMemoryOnly_tag);
 	AnyString(data_ptr&&);
+	void check_at(const size_type) const;
+	const char_type& read_at(const size_type) const;
+	void write_at(char_ñref, const size_type);
 public:
-	AnyString();
-	AnyString(std::nullptr_t) = delete;
-	AnyString(const char_type);
-	AnyString(const char_type* const);
-	AnyString(const AnyString&);
-	AnyString(AnyString&&) noexcept;
-	~AnyString();
+	AnyString();//
+	AnyString(std::nullptr_t) = delete;//
+	AnyString(const char_type);//
+	AnyString(const char_type* const);//
+	AnyString(const AnyString&);//
+	AnyString(AnyString&&) noexcept;//
+	~AnyString();//
 
-	template<typename OtherTraits, typename Alloc>
-	AnyString(const std::basic_string<char_type, OtherTraits, Alloc>&);
+	template<typename OtherTraits, typename Alloc>//
+	AnyString(const std::basic_string<char_type, OtherTraits, Alloc>&);//
 public:
-	AnyString& operator=(const AnyString&)&;
-	AnyString& operator=(AnyString&&)& noexcept;
+	AnyString& operator=(const AnyString&)&;//
+	AnyString& operator=(AnyString&&)& noexcept;//
 	AnyString& operator+=(const AnyString&)&;
 public:
 	char_ñref  operator[](const size_type)&&;
@@ -51,13 +54,9 @@ public:
 	size_type  size()  const noexcept;
 	bool empty() const noexcept;
 	void clear();
-	void check_at(const size_type) const;
-	const char_type& read_at(const size_type) const;
-	void write_at(char_ñref, const size_type);
 	bool is_shareable() const;
 	int compare(const AnyString&) const;
 	size_type ref_counter() const;
-
 private:
 	data_ptr _data;
 
@@ -89,12 +88,6 @@ public:
 		char_traits::copy(res->chars(), a._data->chars(), a.size());
 		char_traits::copy(res->chars() + a.size(), b._data->chars(), b.size());
 		return AnyString(std::move(res));
-
-		/*size_type size = a.size() + b.size();
-		AnyString res(size);
-		char_traits::copy(res._data->chars(), a._data->chars(), a.size());
-		char_traits::copy(res._data->chars() + a.size(), b._data->chars(), b.size());
-		return res;*/
 	}
 
 };

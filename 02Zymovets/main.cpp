@@ -13,10 +13,6 @@ void prev_test()
 {
 	using namespace Zymovets02_AnyString;
 	using String = AnyString<char>;
-	//String b = "abcde";
-	//const char* pb = static_cast<const char*>(b);
-	//b = pb;
-	//Constructors, assignment :
 	{
 		cout << "1. Constructors & assignment" << endl;
 		cout << "Calling all the constructors :" << endl;
@@ -146,6 +142,11 @@ void tester(const AnyString<wchar_t, CharTraits>& str)
 	wcout << L"RefCounter: " << str.ref_counter() << endl;
 }
 
+String f()
+{
+	return { "rvalue" };
+}
+
 void testString()
 {
 	{
@@ -155,8 +156,6 @@ void testString()
 		String b = "String";				cout << "Created : " << '\"' << b << '\"' << endl;
 		String c = 's';						cout << "Created : " << '\"' << c << '\"' << endl;
 		String d(std::string("string"));	cout << "Created : " << '\"' << d << '\"' << endl;
-		//String e(b);						cout << "Created : " << '\"' << e << '\"' << endl;
-		//String f = _STD move(a);			cout << "Created : " << '\"' << f << '\"' << endl;
 
 		cout << "Notice: String(nullptr) is forbidden by String(std::nullptr_t) = delete!" << endl;
 		//String(nullptr);
@@ -261,11 +260,143 @@ void testString()
 
 	{
 		cout << "--------------------------------------------------------------------" << endl;
-		cout << endl << "3. Move ctor & assignment :" << endl;
+		cout << endl << "4. Operator[] and Proxy functionality:" << endl;
+		cout << "On constant strings const reference to char is returned:" << endl;
+		const String str('a');
+		cout << "str = " << str << endl;
+		cout << "str[0] = " << str[0] << endl;
+		cout << "str[0] = 'n'; - does not work." << endl;
+		//str[0] = 'n';
+
+		cout << "OPTIMIZATION: When string is rvalue, then there's no \nsense in modifying it, so const ref is returned again :" << endl;
+		
+		cout << "f - some function, returning rvalue :" << endl;
+		cout << "f() = " << f() << endl;
+		cout << "f()[0]" << f()[0] << endl;
+		cout << "f()[0] = 'n' - does not compile" << endl;
+		//f()[0] = 'n';
+
+		cout << "When our String is modifiable lvalue, then:" << endl;
+		cout << "Create a few dependent strings : " << endl;
+		String a("__dependent"), b(a), c(a);
+		cout << "testers:" << endl;
+		cout << "================================================" << endl;
+		tester(a);
+		tester(b);
+		tester(c);
+		cout << "================================================" << endl;
+		cout << "Let's modify first one :" << endl;
+		cout << "a[0] = 'i'; a[1] = 'n'; :" << endl;
+		a[0] = 'i'; a[1] = 'n';
+		cout << "testers:" << endl;
+		cout << "================================================" << endl;
+		tester(a);
+		tester(b);
+		tester(c);
+		cout << "================================================" << endl;
+		cout << "Now the functionality of CharProxy :" << endl;
+		cout << "Operations which do not abolish shareability :" << endl;
+		cout << "&a[0] = " << static_cast<const void*>(&a[0]) << endl;
+		cout << "a[0].char_copy() = " << a[0].char_copy() << endl;
+		cout << "static_cast<const char&>(a[0]) = " << static_cast<const char&>(a[0]) << endl;
+		cout << "testers :" << endl;
+		cout << "================================================" << endl;
+		tester(a);
+		tester(b);
+		tester(c);
+		cout << "================================================" << endl;
+		cout << "But the following operations do abolish shareability : " << endl;
+		cout << "a[0].char_ptr() = " << static_cast<void*>(a[0].char_ptr()) << endl;
+		cout << "a[0].char_ref() = " << a[0].char_ref() << endl;
+		cout << "testers :" << endl;
+		cout << "================================================" << endl;
+		tester(a);
+		tester(b);
+		tester(c);
+		cout << "================================================" << endl;
+		cout << "If we now create a string from a, it will not share its data and copy will inevitably happen :" << endl;
+		String d(a);
+		cout << "testers :" << endl;
+		cout << "================================================" << endl;
+		tester(a);
+		tester(b);
+		tester(c);
+		tester(d);
+		cout << "================================================" << endl;
 	}
+
+	{
+		cout << "--------------------------------------------------------------------" << endl;
+		cout << endl << "5. Basic methods testing:" << endl;
+		cout << "Some methods are used in implementation of the string, so we have tested them." << endl;
+		cout << "They are : is_shareable, compare, ref_counter, size." << endl;
+		String str("some_str");
+		cout << "String created : " << '\"' << str << '\"' << endl;
+		cout << _STD boolalpha << "str.empty() = " << str.empty() << endl;
+		cout << "str.clear();" << endl;
+		str.clear();
+		cout << "str = " << '\"' << str << '\"' << ", str.empty() = " << str.empty() << endl;
+	}
+
+	{
+		cout << endl;
+		cout << "5. operator+ and operator+= : " << endl;
+		cout << "Operator+ calls moving constructor to move the local result :" << endl;
+		cout << "String(\"abc\") + String(\"def\"): " << endl;
+		cout << "Result = " << String("abc") + String("def") << endl;
+
+		cout << endl;
+		cout << "When trying to mix types : " << endl;
+		cout << "String(\"abc\") + \"cde\" = " << endl << String("abc") + "cde" << endl;
+		cout << "\"cde\" + String(\"abc\") = " << endl << "cde" + String("abc") << endl;
+		cout << "String(\"abc\") + std::string(\"cde\") = " << endl << String("abc") + std::string("cde") << endl;
+		cout << "std::string(\"cde\") + String(\"abc\") = " << endl << std::string("cde") + String("abc") << endl;
+		cout << endl;
+		cout << endl;
+		String str1("abc"), str2("def");
+		cout << "str1 = \"" << str1 << "\", str2 = \"" << str2 << "\"." << endl;
+		cout << "str1 += str2 :" << endl;
+		str1 += str2;
+		cout << "str2 += \"some\" :" << endl;
+		str2 += "some";
+		cout << "str1 += std::string(\"some\") :" << endl;
+		str1 += std::string("some");
+		cout << "str1 = \"" << str1 << "\", str2 = \"" << str2 << "\"." << endl;
+	}
+
+	//Cmp operators :
+	cout << endl;
+	cout << "String(\"abc\") != String(\"cde\") = " << endl << (String("abc") != String("cde")) << endl;
+	cout << "String(\"abc\") == \"abc\" = " << endl << (String("abc") == String("abc")) << endl;
+
+	cout << endl << "Now create a vector of Strings (a tone of copies) :" << endl;
+	std::vector<String> toSort
+	{
+		"bcd",
+		"abcd",
+		"ab",
+		"abc",
+		"abc",
+		"defgas",
+		"dabc"
+	};
+	auto pringToSort = [&toSort]()
+	{
+		cout << "toSort :" << endl;
+		for (size_t i = 0u; i < toSort.size(); ++i)
+		{
+			cout << toSort[i] << endl;
+		}
+	};
+	cout << endl;
+	pringToSort();
+	cout << endl;
+	cout << "Now sort it using std::sort (some moves):" << endl;
+	_STD sort(toSort.begin(), toSort.end(), std::less<String>());
+	cout << endl;
+	pringToSort();
 }
 
-#include <vector>
 int main()
 {
 	cout << "ATTENTION! If you want to see all the destructor calls" << endl;

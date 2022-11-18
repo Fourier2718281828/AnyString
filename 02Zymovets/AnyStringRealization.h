@@ -7,12 +7,6 @@
 
 ANY_BEGIN
 
-//ANY_MEMBER AnyString(const size_type count, AllocateMemoryOnly_tag) :
-//	_data(std::make_shared<string_data>(count))
-//{
-//
-//}
-
 ANY_MEMBER AnyString(data_ptr&& data) :
 	_data(std::move(data))
 {
@@ -101,7 +95,7 @@ ANY_METHOD operator=(AnyString&& str) & noexcept -> AnyString&
 	{
 		_data = std::move(str._data);
 #ifndef NDEBUG
-		PRINT("operator=(AnyString&& str)&")
+		PRINT("###operator=(AnyString&& str)&")
 #endif // !NDEBUG
 	}
 
@@ -150,7 +144,7 @@ ANY_METHOD clear() -> void
 ANY_METHOD check_at(const size_type i) const -> void
 {
 	if (i >= size())
-		throw BadString(BadString::Type::IndexOutOfBounds, "Index out of bounds.");
+		throw BadAnyString(BadAnyString::Type::IndexOutOfBounds, "Index out of bounds.");
 }
 
 ANY_METHOD read_at(const size_type i) const -> const char_type&
@@ -208,10 +202,10 @@ private:
 	const string_t _message;
 	const Type        _type;
 public:
-	BadString(const Type type, const string_t& str = "") :
+	BadAnyString(const Type type, const string_t& str = "") :
 		_message(str), _type(type) {}
 
-	~BadString() = default;
+	~BadAnyString() = default;
 
 	inline const string_t what() const noexcept
 	{

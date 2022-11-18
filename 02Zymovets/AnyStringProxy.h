@@ -96,23 +96,6 @@ PROXY_MEMBER operator const char_type& () const
 	return _proxyship.read_at(_index);
 }
 
-//PROXY_METHOD operator&() -> char_type*
-//{
-//	get_infected();
-//	return &_proxyship._data->chars()[_index];
-//}
-
-//PROXY_MEMBER operator char_type() const
-//{
-//	return _proxyship.read_at(_index);
-//}
-
-//PROXY_MEMBER operator char_type& ()
-//{
-//	get_infected();
-//	return _proxyship._data->chars()[_index];
-//}
-
 PROXY_METHOD operator=(char_ñref c) -> CharProxy&
 {
 	_proxyship.write_at(c, _index);
