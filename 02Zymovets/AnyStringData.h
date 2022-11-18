@@ -30,7 +30,6 @@ public:
 	bool is_shareable() const noexcept;
 	size_type size() const noexcept;
 	char_type* chars() noexcept;
-	//void copy_elems_from(const char_type* const, const size_type);
 public:
 	string_data& operator= (const string_data&) = delete;
 private:
@@ -55,7 +54,6 @@ DATA_MEMBER string_data::string_data(const size_type n, AllocateOnly_tag) :
 DATA_MEMBER string_data(const char_type* const str, const size_type size) :
 	string_data(size, AllocateOnly_tag{})
 {
-	//copy_elems_from(str, size + 1); //HEREEEEEEEEEEEE
 	char_traits::copy(_chrs, str, size);
 }
 
@@ -101,11 +99,6 @@ DATA_METHOD chars() noexcept -> char_type*
 {
 	return _chrs;
 }
-
-//DATA_METHOD copy_elems_from(const char_type* const str, const size_type size) -> void
-//{
-//	char_traits::copy(_chrs, str, size);
-//}
 
 ANY_END
 

@@ -8,6 +8,7 @@
     <ClInclude Include="AnyStringProxy.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Typedefs.h" />
+    <ClInclude Include="ColouredChar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

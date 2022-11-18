@@ -145,6 +145,7 @@
     <ClInclude Include="AnyStringRealization.h" />
     <ClInclude Include="CharTraits.h" />
     <ClInclude Include="AnyStringData.h" />
+    <ClInclude Include="ColouredChar.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Typedefs.h" />
   </ItemGroup>

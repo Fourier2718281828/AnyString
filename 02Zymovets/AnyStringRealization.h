@@ -66,7 +66,9 @@ ANY_MEMBER AnyString(AnyString&& str) noexcept :
 ANY_MEMBER ~AnyString()
 {
 #ifndef NDEBUG
+#ifndef NODESTRUCTORS
 	PRINT("###~AnyString()")
+#endif // !NODESTRUCTORS
 #endif // !NDEBUG
 }
 
@@ -148,7 +150,7 @@ ANY_METHOD clear() -> void
 ANY_METHOD check_at(const size_type i) const -> void
 {
 	if (i >= size())
-		throw 1; //TODO define Badstring and throw it!
+		throw BadString(BadString::Type::IndexOutOfBounds, "Index out of bounds.");
 }
 
 ANY_METHOD read_at(const size_type i) const -> const char_type&
@@ -188,6 +190,39 @@ ANY_METHOD compare(const AnyString& str) const -> int
 	if (len1 > len2) return 1;
 	                 return 0;
 }
+
+template<typename CharType, typename CharTraits>
+class AnyString<CharType, CharTraits>::BadAnyString
+{
+public:
+	using char_type = CharType;
+	using char_traits = CharTraits;
+	using string_t = std::string;
+public:
+	enum class Type
+	{
+		IndexOutOfBounds,
+		NonTerminatedStringInput,
+	};
+private:
+	const string_t _message;
+	const Type        _type;
+public:
+	BadString(const Type type, const string_t& str = "") :
+		_message(str), _type(type) {}
+
+	~BadString() = default;
+
+	inline const string_t what() const noexcept
+	{
+		return _message;
+	}
+
+	inline Type type() const noexcept
+	{
+		return _type;
+	}
+};
 
 ANY_END
 

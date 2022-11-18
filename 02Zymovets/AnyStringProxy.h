@@ -32,6 +32,11 @@ public:
 		return o << static_cast<const char_type&>(proxy);
 	}
 
+	friend auto operator<=>(const CharProxy& a, const CharProxy& b)
+	{
+		return static_cast<const char_type&>(a) <=> static_cast<const char_type&>(b);
+	}
+
 public:
 	using char_type = AnyString::char_type;
 	using char_ñref = AnyString::char_ñref;
