@@ -25,8 +25,7 @@ public:
 	~string_data();
 public:
 	data_ptr clone() const;
-	void assign(const char_type* const, const size_type);
-	void set_shareable(bool sharable) noexcept;
+	void set_shareable(bool) noexcept;
 	bool is_shareable() const noexcept;
 	size_type size() const noexcept;
 	char_type* chars() noexcept;
