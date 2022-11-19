@@ -21,7 +21,6 @@ public:
 	~ColouredChar() = default;
 public:
 	ColouredChar& operator= (const ColouredChar&)& = default;
-	//auto operator<=>(const ColouredChar&) const = default;
 public:
 	operator int() const;
 	char& value();
@@ -92,6 +91,31 @@ std::ostream& operator<< (std::ostream& o, const ColouredChar& ch)
 bool operator==(const ColouredChar& c1, const ColouredChar& c2)
 {
 	return c1.value() == c2.value();
+}
+
+bool operator!=(const ColouredChar& c1, const ColouredChar& c2)
+{
+	return !(c1 == c2);
+}
+
+bool operator<(const ColouredChar& c1, const ColouredChar& c2)
+{
+	return c1.value() < c2.value();
+}
+
+bool operator<=(const ColouredChar& c1, const ColouredChar& c2)
+{
+	return !(c2 < c1);
+}
+
+bool operator>(const ColouredChar& c1, const ColouredChar& c2)
+{
+	return c2 < c1;
+}
+
+bool operator>=(const ColouredChar& c1, const ColouredChar& c2)
+{
+	return !(c1 < c2);
 }
 
 ColouredChar* fill(const char* chrs, const size_t len, const ColouredChar::Color color)

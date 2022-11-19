@@ -88,8 +88,8 @@ public:
 		using allocate_tag = typename string_data::AllocateOnly_tag;
 		size_type size = a.size() + b.size();
 		data_ptr res = std::make_shared<string_data>(size, allocate_tag{});
-		char_traits::copy(res->chars(), a._data->chars(), a.size());
-		char_traits::copy(res->chars() + a.size(), b._data->chars(), b.size());
+		res->construct_range(res->chars(), a._data->chars(), a.size());
+		res->construct_range(res->chars() + a.size(), b._data->chars(), b.size());
 		return AnyString(std::move(res));
 	}
 

@@ -29,6 +29,8 @@ public:
 	bool is_shareable() const noexcept;
 	size_type size() const noexcept;
 	char_type* chars() noexcept;
+	char_type* construct_char(char_type* const, const char_type&) const;
+	void construct_range(char_type*, const char_type*, size_type) const;
 public:
 	string_data& operator= (const string_data&) = delete;
 private:
@@ -43,23 +45,23 @@ DATA_MEMBER string_data::string_data() :
 }
 
 DATA_MEMBER string_data::string_data(const size_type n, AllocateOnly_tag) :
-	_chrs(new char_type[n + 1]),
+	_chrs(reinterpret_cast<char_type*>(::operator new((n + 1) * sizeof(char_type)))),
 	_size(n),
 	_shareable(true)
 {
-	char_traits::assign(_chrs[n], char_type());
+	construct_char(&_chrs[n], char_type());
 }
 
 DATA_MEMBER string_data(const char_type* const str, const size_type size) :
 	string_data(size, AllocateOnly_tag{})
 {
-	char_traits::copy(_chrs, str, size);
+	construct_range(_chrs, str, size);
 }
 
 DATA_MEMBER string_data(const char_type c) :
 	string_data(1u, AllocateOnly_tag{})
 {
-	char_traits::assign(_chrs[0], c);
+	construct_char(&_chrs[0], c);
 }
 
 DATA_MEMBER ~string_data()
@@ -68,7 +70,11 @@ DATA_MEMBER ~string_data()
 	PRINT("###String Data deleted")
 #endif // !NDEBUG
 
-	delete[] _chrs;
+	for (size_type i = 0; i < size(); ++i)
+	{
+		_chrs[i].~char_type();
+	}
+	::operator delete(_chrs);
 	_chrs = nullptr;
 	_size = 0u;
 	_shareable = false;
@@ -97,6 +103,19 @@ DATA_METHOD size() const noexcept -> size_type
 DATA_METHOD chars() noexcept -> char_type*
 {
 	return _chrs;
+}
+
+DATA_METHOD construct_char(char_type* const ptr, const char_type& ch) const -> char_type*
+{
+	return new (ptr) char_type(ch);
+}
+
+DATA_METHOD construct_range(char_type* dst, const char_type* src, size_type cnt) const -> void
+{
+	for (; cnt; dst++, src++, --cnt)
+	{
+		construct_char(dst, *src);
+	}
 }
 
 ANY_END
