@@ -67,7 +67,7 @@ ANY_MEMBER ~AnyString()
 }
 
 template<typename CharType, typename CharTraits>
-template<typename OtherTraits, typename Alloc>
+template<typename OtherTraits, typename Alloc, typename>
 inline AnyString<CharType, CharTraits>::AnyString(const std::basic_string<char_type, OtherTraits, Alloc>& str) :
 	AnyString(str.c_str())
 {

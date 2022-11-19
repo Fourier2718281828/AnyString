@@ -27,25 +27,28 @@ public:
 private:
 	using data_ptr = std::shared_ptr<string_data>;
 private:
-	//AnyString(const size_type, AllocateMemoryOnly_tag);
 	AnyString(data_ptr&&);
 	void check_at(const size_type) const;
 	const char_type& read_at(const size_type) const;
 	void write_at(char_ñref, const size_type);
 public:
-	AnyString();//
-	AnyString(std::nullptr_t) = delete;//
-	AnyString(const char_type);//
-	AnyString(const char_type* const);//
-	AnyString(const AnyString&);//
-	AnyString(AnyString&&) noexcept;//
-	~AnyString();//
+	AnyString();
+	AnyString(std::nullptr_t) = delete;
+	AnyString(const char_type);
+	AnyString(const char_type* const);
+	AnyString(const AnyString&);
+	AnyString(AnyString&&) noexcept;
+	~AnyString();
 
-	template<typename OtherTraits, typename Alloc>//
-	AnyString(const std::basic_string<char_type, OtherTraits, Alloc>&);//
+	template<typename OtherTraits, typename Alloc, typename = 
+		std::enable_if_t<!std::is_array_v<char_type> && 
+		std::is_trivial_v<char_type>                 && 
+		std::is_standard_layout_v<char_type>>
+		>
+	AnyString(const std::basic_string<char_type, OtherTraits, Alloc>&);
 public:
-	AnyString& operator=(const AnyString&)&;//
-	AnyString& operator=(AnyString&&)& noexcept;//
+	AnyString& operator=(const AnyString&)&;
+	AnyString& operator=(AnyString&&)& noexcept;
 	AnyString& operator+=(const AnyString&)&;
 public:
 	char_ñref  operator[](const size_type)&&;
@@ -75,14 +78,14 @@ public:
 		return true;
 	}
 
-	friend inline char_traits::comparison_category operator<=> (const AnyString& a, const AnyString& b)
+	friend inline typename char_traits::comparison_category operator<=> (const AnyString& a, const AnyString& b)
 	{
-		return static_cast<char_traits::comparison_category>(a.compare(b) <=> 0);
+		return static_cast<typename char_traits::comparison_category>(a.compare(b) <=> 0);
 	}
 
 	friend inline AnyString operator+ (const AnyString& a, const AnyString& b)
 	{
-		using allocate_tag = string_data::AllocateOnly_tag;
+		using allocate_tag = typename string_data::AllocateOnly_tag;
 		size_type size = a.size() + b.size();
 		data_ptr res = std::make_shared<string_data>(size, allocate_tag{});
 		char_traits::copy(res->chars(), a._data->chars(), a.size());

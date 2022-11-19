@@ -3,9 +3,9 @@
 #include "Macros.h"
 
 #include <string>
-#include <string_view>
 #include <iostream>
 #include <cctype>
+#include <compare>
 
 ANY_BEGIN
 
